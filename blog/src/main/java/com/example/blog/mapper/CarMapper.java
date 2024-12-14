@@ -1,9 +1,10 @@
 package com.example.blog.mapper;
 
-import com.example.blog.car.Car;
-import com.example.blog.car.CarDto;
+import com.example.blog.domain.Car;
+import com.example.blog.domain.CarDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
@@ -11,6 +12,14 @@ public interface CarMapper {
 
     CarMapper INSTANCE = Mappers.getMapper(CarMapper.class);
 
-    @Mapping(source= "numberOfSeats", target = "seatCount")
+    @Mapping(source = "make", target = "manufacturer")
+    @Mapping(source = "numberOfSeats", target = "seatCount")
     CarDto carToCarDto(Car car);
+
+    //특정 객체를 기준으로 update하는 로직도 가능
+    @Mapping(target = "make", source = "manufacturer")
+    @Mapping(target = "numberOfSeats", source = "seatCount")
+    void updateCarFromDto(CarDto carDto, @MappingTarget Car car);
+
+
 }
