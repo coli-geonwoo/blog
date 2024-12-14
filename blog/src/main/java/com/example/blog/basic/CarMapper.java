@@ -18,6 +18,4 @@ public interface CarMapper {
     @Mapping(target = "make", source = "manufacturer")
     @Mapping(target = "numberOfSeats", source = "seatCount")
     void updateCarFromDto(CarDto carDto, @MappingTarget Car car);
-
-
 }

@@ -18,7 +18,6 @@ class AddressMapperTest {
 
         assertThat(deliveryAddressDto.getDescription()).isEqualTo(person.getDescription());
         assertThat(deliveryAddressDto.getHouseNumber()).isEqualTo(String.valueOf(address.getHouseNo()));
-
     }
 
     @Test
