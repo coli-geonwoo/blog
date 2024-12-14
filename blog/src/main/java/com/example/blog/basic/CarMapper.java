@@ -1,7 +1,5 @@
-package com.example.blog.mapper;
+package com.example.blog.basic;
 
-import com.example.blog.domain.Car;
-import com.example.blog.domain.CarDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

@@ -2,9 +2,10 @@ package com.example.blog.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.blog.domain.Car;
-import com.example.blog.domain.CarDto;
-import com.example.blog.domain.CarType;
+import com.example.blog.basic.Car;
+import com.example.blog.basic.CarDto;
+import com.example.blog.basic.CarMapper;
+import com.example.blog.basic.CarType;
 import org.junit.jupiter.api.Test;
 
 class CarMapperTest {
