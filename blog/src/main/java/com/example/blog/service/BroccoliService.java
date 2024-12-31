@@ -12,18 +12,12 @@ public class BroccoliService {
     private final BroccoliRepository broccoliRepository;
 
     @Transactional
-    public long deleteAll() {
-        long start = System.currentTimeMillis();
+    public void deleteAll() {
         broccoliRepository.deleteAll();
-        long end = System.currentTimeMillis();
-        return end - start;
     }
 
     @Transactional
-    public long deleteAllInBatch() {
-        long start = System.currentTimeMillis();
+    public void deleteAllInBatch() {
         broccoliRepository.deleteAllInBatch();
-        long end = System.currentTimeMillis();
-        return end - start;
     }
 }
