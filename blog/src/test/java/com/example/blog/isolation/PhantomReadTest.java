@@ -77,6 +77,38 @@ public class PhantomReadTest extends BaseTest {
         connectionA.rollback();
     }
 
+    @DisplayName("Mysql은 REPEATABLE_READ 에서 읽기 작업에 한해선 팬텀 리딩이 발생하지 않는다")
+    @Test
+    void not_phantom_reading_when_only_read() throws SQLException {
+        int isolationLevel = Connection.TRANSACTION_REPEATABLE_READ;
+        userDao.insert(dataSource.getConnection(), new User("coli", "old", "email@email.com"));
+
+        //커넥션 A 시작
+        Connection connectionA = dataSource.getConnection();
+        connectionA.setAutoCommit(false);
+        connectionA.setTransactionIsolation(isolationLevel);
+
+        // 사용자A가 id로 범위를 조회했다.
+        List<User> firstRead = userDao.findGreaterThan(connectionA, 1);
+
+        new Thread(RunnableWrapper.accept(() -> {
+            Connection connectionB = dataSource.getConnection();
+            connectionB.setAutoCommit(false);
+
+            // 새로운 user 객체를 저장했다.
+            userDao.insert(connectionB, new User("newUser", "new", "new@email.com"));
+            connectionB.commit();
+        })).start();
+
+        sleep(0.5);
+
+        // 사용자A가 다시 id로 범위를 조회했다.
+        List<User> secondRead = userDao.findGreaterThan(connectionA, 1);
+
+        assertThat(secondRead).hasSize(firstRead.size()); //팬텀리딩이 발생하지 않음
+        connectionA.rollback();
+    }
+
     @DisplayName("SERIALIZABLE에서는 팬텀리딩이 발생하지 않는다")
     @Test
     void not_phantom_reading() throws SQLException {
