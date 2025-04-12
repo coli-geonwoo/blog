@@ -13,7 +13,7 @@ import org.testcontainers.containers.JdbcDatabaseContainer;
 
 public abstract class BaseTest {
 
-    protected static final Logger log = LoggerFactory.getLogger(DirtyReadTest.class);
+    protected static final Logger log = LoggerFactory.getLogger(BaseTest.class);
     protected DataSource dataSource;
     protected UserDao userDao;
 
