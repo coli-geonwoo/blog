@@ -11,6 +11,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 public class ArchUnitLearningTest {
 
@@ -100,6 +101,25 @@ public class ArchUnitLearningTest {
                     .resideInAPackage("..foo..");
 
             dependencyRule.check(importedClasses);
+        }
+    }
+
+    @Nested
+    class AnnotationTest {
+
+        @DisplayName("service 패키지 내의 서비스 클래스는 클래스 레벨에서 @Transactional이 붙어있어야 한다")
+        @Test
+        void sourceAnnotationTest() {
+            JavaClasses importedClasses = new ClassFileImporter()
+                    .importPackages("com.example.blog");
+
+            ArchRule annotaionRule = classes()
+                    .that()
+                    .resideInAPackage("..service..")
+                    .should()
+                    .beAnnotatedWith(Transactional.class);
+
+            annotaionRule.check(importedClasses);
         }
     }
 
