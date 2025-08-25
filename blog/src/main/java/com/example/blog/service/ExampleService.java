@@ -7,4 +7,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ExampleService {
 
+    private final ExampleService2 exampleService2;
+
 }
