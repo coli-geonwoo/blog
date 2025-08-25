@@ -48,4 +48,43 @@ public class ArchUnitLearningTest {
         }
     }
 
+    @Nested
+    class ClassesDependencyTest {
+
+        @DisplayName("*Bar의 패턴을 가진 클래스는 오직 Bar 클래스에서만 참조되어야 한다.")
+        @Test
+        void barClassTest() {
+            JavaClasses importedClasses = new ClassFileImporter()
+                    .importPackages("arch");
+
+            ArchRule dependencyRule = classes()
+                    .that()
+                    .haveNameMatching(".*Bar")
+                    .should()
+                    .onlyHaveDependentClassesThat()
+                    .haveSimpleNameEndingWith("Bar");
+
+            dependencyRule.check(importedClasses);
+        }
+    }
+
+    @Nested
+    class ClassContainedTest {
+
+        @DisplayName("Source로 시작하는 클래스들은 모두 source 패키지에 있어야 한다.")
+        @Test
+        void sourceClassCotainMentTest() {
+            JavaClasses importedClasses = new ClassFileImporter()
+                    .importPackages("arch");
+
+            ArchRule containRule = classes()
+                    .that()
+                    .haveSimpleNameStartingWith("Source")
+                    .should()
+                    .resideInAPackage("..source..");
+
+            containRule.check(importedClasses);
+        }
+    }
+
 }
