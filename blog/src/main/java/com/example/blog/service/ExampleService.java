@@ -9,6 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ExampleService {
 
-    private final ExampleService2 exampleService2;
+//    private final ExampleController exampleController;
 
 }

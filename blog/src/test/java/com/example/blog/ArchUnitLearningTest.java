@@ -2,9 +2,9 @@ package com.example.blog;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
+import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
+import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
-import com.example.blog.service.ExampleService;
-import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
@@ -43,8 +43,8 @@ public class ArchUnitLearningTest {
             JavaClasses importedClasses = new ClassFileImporter()
                     .importPackages("com.example.blog");
 
-            JavaClass clazz = importedClasses.get(ExampleService.class);
-            System.out.print(clazz.getSimpleName());
+//            JavaClass clazz = importedClasses.get(ExampleService.class);
+//            System.out.print(clazz.getSimpleName());
         }
     }
 
@@ -120,6 +120,47 @@ public class ArchUnitLearningTest {
                     .beAnnotatedWith(Transactional.class);
 
             annotaionRule.check(importedClasses);
+        }
+    }
+
+    @Nested
+    class LayerTest {
+
+        @DisplayName("Controller > Service > Repository 의존성이 유지된다")
+        @Test
+        void layerTest() {
+            JavaClasses importedClasses = new ClassFileImporter()
+                    .importPackages("com.example.blog");
+
+            ArchRule layerRule = layeredArchitecture()
+                    .consideringAllDependencies()
+                    .layer("MyController").definedBy("..controller..")
+                    .layer("MyService").definedBy("..service..")
+                    .layer("MyRepository").definedBy("..repository..")
+
+                    .whereLayer("MyController").mayNotBeAccessedByAnyLayer()
+                    .whereLayer("MyService").mayOnlyBeAccessedByLayers("MyController")
+                    .whereLayer("MyRepository").mayOnlyBeAccessedByLayers("MyService");
+
+            layerRule.check(importedClasses);
+        }
+    }
+
+    @Nested
+    class CycleTest {
+
+        @DisplayName("순환참조가 생기는지 테스트할 수 있다")
+        @Test
+        void cylcleTest() {
+            JavaClasses importedClasses = new ClassFileImporter()
+                    .importPackages("com.example.blog");
+
+            ArchRule cycleRule = slices()
+                    .matching("com.example.blog.(*)..")
+                    .should()
+                    .beFreeOfCycles();
+
+            cycleRule.check(importedClasses);
         }
     }
 
