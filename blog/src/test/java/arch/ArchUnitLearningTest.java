@@ -6,6 +6,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
+import java.sql.Connection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -82,6 +83,40 @@ public class ArchUnitLearningTest {
                     .haveSimpleNameStartingWith("Source")
                     .should()
                     .resideInAPackage("..source..");
+
+            containRule.check(importedClasses);
+        }
+    }
+
+    @Nested
+    class ClassInheritanceTest {
+
+        @DisplayName("Connection을 구현한 구현체들은 ~Connection으로 네이밍해야 한다.")
+        @Test
+        void connectionNamingTest() {
+            JavaClasses importedClasses = new ClassFileImporter()
+                    .importPackages("arch");
+
+            ArchRule containRule = classes()
+                    .that()
+                    .implement(Connection.class)
+                    .should()
+                    .haveSimpleNameEndingWith("Connection");
+
+            containRule.check(importedClasses);
+        }
+
+        @DisplayName("Connection에 할당가능한 객체는 ~Connection으로 네이밍해야 한다.")
+        @Test
+        void connectionNamingTest2() {
+            JavaClasses importedClasses = new ClassFileImporter()
+                    .importPackages("arch");
+
+            ArchRule containRule = classes()
+                    .that()
+                    .areAssignableTo(Connection.class)
+                    .should()
+                    .haveSimpleNameEndingWith("Connection");
 
             containRule.check(importedClasses);
         }

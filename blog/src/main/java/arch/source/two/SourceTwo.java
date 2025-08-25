@@ -1,4 +1,6 @@
 package arch.source.two;
 
-public class SourceTwo {
+import arch.source.Source;
+
+public class SourceTwo extends Source {
 }

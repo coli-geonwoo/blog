@@ -1,6 +1,8 @@
 package arch.source.three;
 
-public class SourceThree {
+import arch.source.Source;
+
+public class SourceThree extends Source {
 
 //    private Foo foo;
 }
